@@ -5,11 +5,15 @@ body {
     padding: 0 20px;
 }
 
+h1 {
+    margin-bottom: 30px;
+}
+
 .lab-nav {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 30px 0;
+    margin-bottom: 40px;
     padding-bottom: 15px;
     border-bottom: 1px solid #ddd;
 }
@@ -27,18 +31,19 @@ body {
     color: white;
 }
 
-h1 {
-    font-size: 32px;
-}
-
-h2 {
-    margin-top: 30px;
-}
-
-p {
-    line-height: 1.6;
-}
-
 #chart {
     margin-top: 30px;
+}
+
+.bar {
+    fill: steelblue;
+}
+
+.score-label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.name-label {
+    font-size: 14px;
 }
