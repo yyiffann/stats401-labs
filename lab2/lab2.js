@@ -15,7 +15,7 @@ d3.csv(
     d => ({
         city: d.city,
         population: +d.population,
-        temp_c: +temp_c,
+        temp_c: +d.temp_c,
         development_level: d.development_level,
         region: d.region
     })
@@ -28,7 +28,7 @@ d3.csv(
         .attr("height", height);
 
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.city))
+        .domain(d3.extent(data, d => d.population))
         .nice()
         .range([
             margin.left,
@@ -36,7 +36,7 @@ d3.csv(
         ]);
 
     const yScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.population))
+        .domain(d3.extent(data, d => d.temp_c))
         .nice()
         .range([
             height - margin.bottom,
@@ -102,8 +102,8 @@ d3.csv(
                     <strong>${d.city}</strong><br>
                     Population in millions: ${d.population}<br>
                     Average temperature in Celsius: ${d.temp_c}<br>
-                    Development level: ${d.region}<br>
-                    Region: ${d.development_level}
+                    Development level: ${d.development_level}<br>
+                    Region: ${d.region}
                 `);
         })
         .on("mousemove", function(event) {
