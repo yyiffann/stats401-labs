@@ -11,13 +11,13 @@ const margin = {
 const tooltip = d3.select("#tooltip");
 
 d3.csv(
-    "../data/students_multivariate.csv",
+    "../data/cities_multivariate.csv",
     d => ({
-        name: d.name,
-        study_hours: +d.study_hours,
-        score: +d.score,
-        major: d.major,
-        year: d.year
+        city: d.city,
+        population: +d.population,
+        temp_c: +temp_c,
+        development_level: d.development_level,
+        region: d.region
     })
 )
 .then(data => {
@@ -28,7 +28,7 @@ d3.csv(
         .attr("height", height);
 
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.study_hours))
+        .domain(d3.extent(data, d => d.city))
         .nice()
         .range([
             margin.left,
@@ -36,29 +36,28 @@ d3.csv(
         ]);
 
     const yScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.score))
+        .domain(d3.extent(data, d => d.population))
         .nice()
         .range([
             height - margin.bottom,
             margin.top
         ]);
 
-    const majors = Array.from(
-        new Set(data.map(d => d.major))
+    const regions = Array.from(
+        new Set(data.map(d => d.region))
     );
 
     const colorScale = d3.scaleOrdinal()
-        .domain(majors)
+        .domain(regions)
         .range(d3.schemeTableau10);
 
     const sizeScale = d3.scaleOrdinal()
         .domain([
-            "Freshman",
-            "Sophomore",
-            "Junior",
-            "Senior"
+            "Low",
+            "Medium",
+            "High",
         ])
-        .range([5, 7, 9, 11]);
+        .range([5, 7, 9]);
 
     svg.append("g")
         .attr(
@@ -74,25 +73,25 @@ d3.csv(
         )
         .call(d3.axisLeft(yScale));
 
-    svg.selectAll(".student-point")
+    svg.selectAll(".city-point")
         .data(data)
         .join("circle")
-        .attr("class", "student-point")
+        .attr("class", "city-point")
         .attr(
             "cx",
-            d => xScale(d.study_hours)
+            d => xScale(d.population)
         )
         .attr(
             "cy",
-            d => yScale(d.score)
+            d => yScale(d.temp_c)
         )
         .attr(
             "r",
-            d => sizeScale(d.year)
+            d => sizeScale(d.development_level)
         )
         .attr(
             "fill",
-            d => colorScale(d.major)
+            d => colorScale(d.region)
         )
         .attr("opacity", 0.8)
         .on("mouseover", function(event, d) {
@@ -100,11 +99,11 @@ d3.csv(
             tooltip
                 .style("opacity", 1)
                 .html(`
-                    <strong>${d.name}</strong><br>
-                    Study Hours: ${d.study_hours}<br>
-                    Score: ${d.score}<br>
-                    Major: ${d.major}<br>
-                    Year: ${d.year}
+                    <strong>${d.city}</strong><br>
+                    Population in millions: ${d.population}<br>
+                    Average temperature in Celsius: ${d.temp_c}<br>
+                    Development level: ${d.region}<br>
+                    Region: ${d.development_level}
                 `);
         })
         .on("mousemove", function(event) {
