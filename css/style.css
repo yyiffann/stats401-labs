@@ -47,3 +47,14 @@ h1 {
 .name-label {
     font-size: 14px;
 }
+
+.tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #aaa;
+    padding: 8px 10px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    font-size: 14px;
+}

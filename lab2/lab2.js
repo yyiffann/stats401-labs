@@ -1,0 +1,127 @@
+const width = 800;
+const height = 500;
+
+const margin = {
+    top: 40,
+    right: 170,
+    bottom: 70,
+    left: 70
+};
+
+const tooltip = d3.select("#tooltip");
+
+d3.csv(
+    "../data/students_multivariate.csv",
+    d => ({
+        name: d.name,
+        study_hours: +d.study_hours,
+        score: +d.score,
+        major: d.major,
+        year: d.year
+    })
+)
+.then(data => {
+
+    const svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    const xScale = d3.scaleLinear()
+        .domain(d3.extent(data, d => d.study_hours))
+        .nice()
+        .range([
+            margin.left,
+            width - margin.right
+        ]);
+
+    const yScale = d3.scaleLinear()
+        .domain(d3.extent(data, d => d.score))
+        .nice()
+        .range([
+            height - margin.bottom,
+            margin.top
+        ]);
+
+    const majors = Array.from(
+        new Set(data.map(d => d.major))
+    );
+
+    const colorScale = d3.scaleOrdinal()
+        .domain(majors)
+        .range(d3.schemeTableau10);
+
+    const sizeScale = d3.scaleOrdinal()
+        .domain([
+            "Freshman",
+            "Sophomore",
+            "Junior",
+            "Senior"
+        ])
+        .range([5, 7, 9, 11]);
+
+    svg.append("g")
+        .attr(
+            "transform",
+            `translate(0, ${height - margin.bottom})`
+        )
+        .call(d3.axisBottom(xScale));
+
+    svg.append("g")
+        .attr(
+            "transform",
+            `translate(${margin.left}, 0)`
+        )
+        .call(d3.axisLeft(yScale));
+
+    svg.selectAll(".student-point")
+        .data(data)
+        .join("circle")
+        .attr("class", "student-point")
+        .attr(
+            "cx",
+            d => xScale(d.study_hours)
+        )
+        .attr(
+            "cy",
+            d => yScale(d.score)
+        )
+        .attr(
+            "r",
+            d => sizeScale(d.year)
+        )
+        .attr(
+            "fill",
+            d => colorScale(d.major)
+        )
+        .attr("opacity", 0.8)
+        .on("mouseover", function(event, d) {
+
+            tooltip
+                .style("opacity", 1)
+                .html(`
+                    <strong>${d.name}</strong><br>
+                    Study Hours: ${d.study_hours}<br>
+                    Score: ${d.score}<br>
+                    Major: ${d.major}<br>
+                    Year: ${d.year}
+                `);
+        })
+        .on("mousemove", function(event) {
+
+            tooltip
+                .style(
+                    "left",
+                    `${event.pageX + 10}px`
+                )
+                .style(
+                    "top",
+                    `${event.pageY + 10}px`
+                );
+        })
+        .on("mouseout", function() {
+
+            tooltip
+                .style("opacity", 0);
+        });
+});
