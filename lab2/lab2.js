@@ -73,6 +73,19 @@ d3.csv(
         )
         .call(d3.axisLeft(yScale));
 
+    svg.append("text")
+        .attr("x", (margin.left + width - margin.right) / 2)
+        .attr("y", height - 20)
+        .attr("text-anchor", "middle")
+        .text("Population (millions)");
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -(margin.top + height - margin.bottom) / 2)
+        .attr("y", 20)
+        .attr("text-anchor", "middle")
+        .text("Average Temperature (°C)");
+
     svg.selectAll(".city-point")
         .data(data)
         .join("circle")
