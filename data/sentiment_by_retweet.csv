@@ -1,0 +1,10 @@
+retweet_group,sentiment,count
+No Retweets,Negative,172
+No Retweets,Neutral,466
+No Retweets,Positive,231
+Low,Negative,22
+Low,Neutral,58
+Low,Positive,34
+High,Negative,2
+High,Neutral,9
+High,Positive,6

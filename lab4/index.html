@@ -6,21 +6,55 @@
 
     <meta charset="UTF-8">
 
-    <title>Lab 4</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Lab 4 - Tweet Sentiment Analysis</title>
+
+    <link rel="stylesheet"
+          href="../css/style.css">
 
 </head>
 
 <body>
 
-    <h1>Lab 4</h1>
+    <h1>Lab 4: Cleaning Web Data for Visualization</h1>
 
     <p>
-        Lab 4 will be added here.
+        This visualization explores the relationship between
+        tweet sentiment and retweet count.
+    </p>
+
+    <div id="chart"></div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <h2>Analysis</h2>
+
+    <p>
+        This dataset contains 1,000 randomly sampled tweets about ChatGPT
+        collected from a larger dataset of tweets posted in March 2023.
+        The data were checked for missing values, duplicate records,
+        duplicate IDs, negative engagement values, invalid dates, and
+        empty tweet text. Sentiment was calculated using the
+        RoBERTa-based Twitter sentiment model, producing a sentiment label
+        and a sentiment score for each tweet. For visualization, tweets
+        were divided into three retweet groups: No Retweets, Low
+        (1–10 retweets), and High (more than 10 retweets). The x-axis
+        represents retweet group, the y-axis represents the number of
+        tweets, and color represents sentiment. Most tweets received no
+        retweets, and neutral sentiment was the most common category.
+        Because the high-retweet group contains relatively few tweets,
+        differences in sentiment should be interpreted cautiously.
     </p>
 
     <a href="../index.html">
         Back to home
     </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    <script src="lab4.js"></script>
 
 </body>
 
