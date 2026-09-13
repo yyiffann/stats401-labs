@@ -33,7 +33,7 @@ Promise.all([
     // ========================================
 
     const width = 850;
-    const height = 650;
+    const height = 600;
 
     const svg = d3.select("#chart")
         .append("svg")
@@ -258,6 +258,11 @@ Promise.all([
     // ========================================
 
     simulation.on("tick", () => {
+
+        nodes.forEach(d => {
+            d.x = Math.max(30, Math.min(width - 30, d.x));
+            d.y = Math.max(30, Math.min(height - 30, d.y));
+        });
 
         link
             .attr(
