@@ -32,8 +32,8 @@ Promise.all([
     // 2. Create SVG
     // ========================================
 
-    const width = 1000;
-    const height = 700;
+    const width = 850;
+    const height = 650;
 
     const svg = d3.select("#chart")
         .append("svg")
