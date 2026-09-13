@@ -1,26 +1,144 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <title>Lab 5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lab 5 - Interactive Network Visualization</title>
+
+    <link rel="stylesheet" href="../style.css">
 
 </head>
 
 <body>
 
-    <h1>Lab 5</h1>
+    <h1>Lab 5: Interactive Network Visualization</h1>
+
+    <h2>1. Dataset Description</h2>
 
     <p>
-        Lab 5 will be added here.
+        This visualization shows a synthetic urban transit network
+        containing 50 stations and 50 direct transit connections.
+        Stations belong to five districts: Central, North, South,
+        East, and West.
     </p>
 
-    <a href="../index.html">
-        Back to home
-    </a>
+    <p>
+        Station size represents daily passenger volume, station color
+        represents district, and station shape represents station type.
+        Route width represents travel time, while route color represents
+        route type.
+    </p>
+
+
+    <h2>2. Node-Link Visualization</h2>
+
+    <div id="chart"></div>
+
+    <div id="legend"></div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+
+    <h2>3. Node-Link Design Description</h2>
+
+    <p>
+        District is encoded by node color so that stations in the same
+        geographic district can be identified quickly. Daily passenger
+        volume is encoded by node size, making high-volume stations more
+        visually prominent. Station type is represented by node shape,
+        allowing local, transfer, and terminal stations to be distinguished.
+        Travel time is encoded by link width, while route type is encoded
+        by link color. Dragging allows users to rearrange the network,
+        while hovering highlights connected stations and provides detailed
+        station information through tooltips.
+    </p>
+
+
+    <h2>4. Adjacency Matrix</h2>
+
+    <div id="matrix"></div>
+
+
+    <h2>5. Matrix Design Description</h2>
+
+    <p>
+        Rows and columns represent the same 50 stations. A colored cell
+        indicates a direct connection between two stations. Cell color
+        represents route type, while cell opacity represents travel time.
+        Stations are ordered by district so that groups of stations from
+        the same district appear together and larger connection patterns
+        can be inspected more easily.
+    </p>
+
+
+    <h2>6. Network Questions and Findings</h2>
+
+    <div id="questions">
+
+        <h3>1. Which stations appear central in the network?</h3>
+        <p>
+            The node-link view is most useful for this question because
+            highly connected stations are visually prominent. Stations
+            with several direct connections, such as Station 4, Station 7,
+            Station 10, Station 13, and Station 16, appear relatively
+            central in the network.
+        </p>
+
+        <h3>2. Which districts are strongly connected to one another?</h3>
+        <p>
+            The adjacency matrix is useful because connections between
+            groups of stations can be compared systematically. The
+            East-South, Central-North, and East-West district pairs show
+            particularly strong connection patterns in the network.
+        </p>
+
+        <h3>3. Where are transfer or terminal stations located in the topology?</h3>
+        <p>
+            The node-link view is most useful because station shape directly
+            identifies transfer and terminal stations. These stations can
+            also be inspected together with their surrounding connections
+            using hover highlighting.
+        </p>
+
+        <h3>4. Which stations have high passenger volume?</h3>
+        <p>
+            The node-link visualization answers this most easily because
+            passenger volume is encoded by node size. Stations toward the
+            higher end of the passenger-volume range, especially Station 50,
+            Station 49, and Station 48, appear as larger nodes.
+        </p>
+
+        <h3>5. Where are the longest direct travel-time connections?</h3>
+        <p>
+            The node-link view is most useful because travel time is encoded
+            by link width. The strongest examples include the connections
+            between Station 7 and Station 31, Station 18 and Station 34,
+            and Station 29 and Station 50.
+        </p>
+
+        <h3>6. Are particular route types concentrated in particular parts of the network?</h3>
+        <p>
+            Both views can help answer this question. The node-link view
+            makes the route-type colors easy to follow along the network,
+            while the adjacency matrix makes repeated patterns easier to
+            compare. The route types are distributed throughout the network
+            rather than being limited to one clearly separated region.
+        </p>
+
+    </div>
+
+
+    <p>
+        <a href="../index.html">Back to home</a>
+    </p>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="lab5.js"></script>
 
 </body>
 

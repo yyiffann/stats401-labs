@@ -58,3 +58,60 @@ h1 {
     opacity: 0;
     font-size: 14px;
 }
+
+
+/* ========================================
+   Lab 5
+   ======================================== */
+
+   #chart {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#chart svg {
+    border: 1px solid #ddd;
+    background: #fafafa;
+}
+
+#legend {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    max-width: 700px;
+}
+
+#matrix {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+#matrix svg {
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.tooltip {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    background: white;
+    border: 1px solid #aaa;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+#questions {
+    max-width: 900px;
+}
+
+#questions h3 {
+    margin-top: 25px;
+}
+
+#questions p {
+    line-height: 1.6;
+}
