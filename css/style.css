@@ -117,3 +117,43 @@ h1 {
 #questions p {
     line-height: 1.6;
 }
+
+
+/* ========================================
+   Lab 6
+   ======================================== */
+
+#treemap1,
+#treemap2 {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+#treemap1 svg,
+#treemap2 svg {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    background: #fafafa;
+}
+   
+.cell {
+    cursor: pointer;
+}
+   
+.cell text {
+    pointer-events: none;
+}
+   
+#legend {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    max-width: 700px;
+}
+   
+#description {
+    max-width: 900px;
+    line-height: 1.6;
+}

@@ -6,21 +6,49 @@
 
     <meta charset="UTF-8">
 
-    <title>Lab 6</title>
+    <title>Lab 6 - GDP Treemaps</title>
+
+    <link rel="stylesheet" href="../style.css">
 
 </head>
 
 <body>
 
-    <h1>Lab 6</h1>
+    <h1>Lab 6 — GDP Hierarchy</h1>
 
-    <p>
-        Lab 6 will be added here.
+    <h2>Treemap 1: Squarify</h2>
+
+    <div id="treemap1"></div>
+
+    <h2>Treemap 2: Binary</h2>
+
+    <div id="treemap2"></div>
+
+    <h2>Design Description</h2>
+
+    <p id="description">
+        GDP amount is represented by rectangle area, so countries
+        with larger GDP occupy more space. GDP status is represented
+        using color, allowing users to distinguish increases,
+        unchanged values, and decreases. The first treemap uses
+        squarify, which tends to create more square-like rectangles
+        and can make individual countries easier to compare. The
+        second treemap uses binary subdivision, which creates a
+        different spatial organization while preserving the same
+        hierarchical structure and quantitative values. Comparing
+        the two layouts shows how segmentation strategy changes the
+        spatial arrangement of the same hierarchical data.
     </p>
 
-    <a href="../index.html">
-        Back to home
-    </a>
+    <h2>GDP Status</h2>
+
+    <div id="legend"></div>
+
+    <div id="tooltip"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    <script src="lab6.js"></script>
 
 </body>
 
