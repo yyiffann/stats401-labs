@@ -124,8 +124,8 @@ h1 {
    ======================================== */
 
    #tooltip {
-    position: absolute;
-    opacity: 0;
+    position: fixed;
+    display: none;
     pointer-events: none;
     background: white;
     border: 1px solid #777;

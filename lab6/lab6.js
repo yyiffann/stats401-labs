@@ -17,7 +17,6 @@ d3.json("../data/lab6_assignment_gdp.json")
                 "#d62728"
             ]);
 
-        // Treemap 1
         drawTreemap(
             "#treemap1",
             data,
@@ -25,7 +24,6 @@ d3.json("../data/lab6_assignment_gdp.json")
             statusColor
         );
 
-        // Treemap 2
         drawTreemap(
             "#treemap2",
             data,
@@ -65,6 +63,11 @@ function drawTreemap(
 
     treemap(root);
 
+
+    // ==========================================
+    // SVG
+    // ==========================================
+
     const svg = d3.select(selector)
         .append("svg")
         .attr("width", width)
@@ -75,7 +78,19 @@ function drawTreemap(
     // Tooltip
     // ==========================================
 
-    const tooltip = d3.select("#tooltip");
+    const tooltip = d3.select("#tooltip")
+        .style("position", "fixed")
+        .style("pointer-events", "none")
+        .style("z-index", 1000)
+        .style("background", "white")
+        .style("border", "1px solid #777")
+        .style("padding", "10px 12px")
+        .style("border-radius", "5px")
+        .style("font-size", "14px")
+        .style("line-height", 1.5)
+        .style("box-shadow", "0 2px 8px rgba(0,0,0,0.2)")
+        .style("display", "none")
+        .style("opacity", 0);
 
 
     // ==========================================
@@ -89,7 +104,8 @@ function drawTreemap(
         .attr(
             "transform",
             d => `translate(${d.x0}, ${d.y0})`
-        );
+        )
+        .style("cursor", "pointer");
 
 
     countries.append("rect")
@@ -109,7 +125,10 @@ function drawTreemap(
         .attr("stroke-width", 1);
 
 
+    // ==========================================
     // Country names
+    // ==========================================
+
     countries
         .filter(d =>
             (d.x1 - d.x0) > 50 &&
@@ -125,126 +144,13 @@ function drawTreemap(
 
 
     // ==========================================
-    // Continent / Area boundaries
-    // ==========================================
-
-    const internalNodes = root.descendants()
-        .filter(d =>
-            d.depth > 0 &&
-            d.children
-        );
-
-    const groups = svg.selectAll(".group")
-        .data(internalNodes)
-        .join("g")
-        .attr("class", "group")
-        .attr(
-            "transform",
-            d => `translate(${d.x0}, ${d.y0})`
-        );
-
-
-    // Boundaries
-    groups.append("rect")
-        .attr(
-            "width",
-            d => Math.max(0, d.x1 - d.x0)
-        )
-        .attr(
-            "height",
-            d => Math.max(0, d.y1 - d.y0)
-        )
-        .attr("fill", "none")
-        .attr(
-            "stroke",
-            d => d.depth === 1
-                ? "#222"
-                : "#777"
-        )
-        .attr(
-            "stroke-width",
-            d => d.depth === 1
-                ? 3
-                : 1.5
-        );
-
-
-    // ==========================================
-    // Continent labels
-    // ==========================================
-
-    const continents = groups
-        .filter(d => d.depth === 1);
-
-    continents
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr(
-            "width",
-            d => Math.min(
-                d.x1 - d.x0,
-                150
-            )
-        )
-        .attr("height", 26)
-        .attr("fill", "white")
-        .attr("opacity", 0.9);
-
-    continents
-        .append("text")
-        .attr("x", 5)
-        .attr("y", 18)
-        .attr("font-size", "15px")
-        .attr("font-weight", "bold")
-        .attr("fill", "#222")
-        .text(d => d.data.name);
-
-
-    // ==========================================
-    // Area labels
-    // ==========================================
-
-    const areas = groups
-        .filter(d =>
-            d.depth === 2 &&
-            (d.x1 - d.x0) > 80 &&
-            (d.y1 - d.y0) > 30
-        );
-
-    areas
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr(
-            "width",
-            d => Math.min(
-                d.x1 - d.x0,
-                140
-            )
-        )
-        .attr("height", 22)
-        .attr("fill", "white")
-        .attr("opacity", 0.9);
-
-    areas
-        .append("text")
-        .attr("x", 5)
-        .attr("y", 16)
-        .attr("font-size", "12px")
-        .attr("fill", "#222")
-        .text(d => d.data.name);
-
-
-    // ==========================================
     // Mouse interaction
     // ==========================================
 
     countries
         .on("mouseover", function(event, d) {
 
-            const ancestors =
-                d.ancestors().reverse();
+            const ancestors = d.ancestors().reverse();
 
             const continent =
                 ancestors[1]?.data.name || "N/A";
@@ -256,7 +162,6 @@ function drawTreemap(
                 d.data.status;
 
             tooltip
-                .style("opacity", 1)
                 .html(`
                     <strong>${d.data.name}</strong>
                     <br>
@@ -277,25 +182,24 @@ function drawTreemap(
                         vertical-align: middle;
                     "></span>
                     ${status}
-                `);
+                `)
+                .style("display", "block")
+                .style("opacity", 1)
+                .style("left", `${event.clientX + 15}px`)
+                .style("top", `${event.clientY + 15}px`);
         })
 
         .on("mousemove", function(event) {
 
             tooltip
-                .style(
-                    "left",
-                    `${event.pageX + 12}px`
-                )
-                .style(
-                    "top",
-                    `${event.pageY + 12}px`
-                );
+                .style("left", `${event.clientX + 15}px`)
+                .style("top", `${event.clientY + 15}px`);
         })
 
         .on("mouseout", function() {
 
             tooltip
+                .style("display", "none")
                 .style("opacity", 0);
         });
 }
