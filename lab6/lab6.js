@@ -1,8 +1,9 @@
+// ==========================================
+// Lab 6 — GDP Hierarchy with Two Treemaps
+// ==========================================
+
 d3.json("../data/lab6_assignment_gdp.json")
     .then(data => {
-
-        console.log("Loaded data:", data);
-
 
         const statusColor = d3.scaleOrdinal()
             .domain([
@@ -16,7 +17,7 @@ d3.json("../data/lab6_assignment_gdp.json")
                 "#d62728"
             ]);
 
-
+        // Treemap 1
         drawTreemap(
             "#treemap1",
             data,
@@ -24,7 +25,7 @@ d3.json("../data/lab6_assignment_gdp.json")
             statusColor
         );
 
-
+        // Treemap 2
         drawTreemap(
             "#treemap2",
             data,
@@ -38,6 +39,10 @@ d3.json("../data/lab6_assignment_gdp.json")
     });
 
 
+// ==========================================
+// Draw Treemap
+// ==========================================
+
 function drawTreemap(
     selector,
     data,
@@ -48,11 +53,9 @@ function drawTreemap(
     const width = 900;
     const height = 550;
 
-
     const root = d3.hierarchy(data)
         .sum(d => d.gdp || 0)
         .sort((a, b) => b.value - a.value);
-
 
     const treemap = d3.treemap()
         .size([width, height])
@@ -62,15 +65,22 @@ function drawTreemap(
 
     treemap(root);
 
-
     const svg = d3.select(selector)
         .append("svg")
         .attr("width", width)
         .attr("height", height);
 
 
+    // ==========================================
+    // Tooltip
+    // ==========================================
+
     const tooltip = d3.select("#tooltip");
 
+
+    // ==========================================
+    // Country rectangles
+    // ==========================================
 
     const countries = svg.selectAll(".country")
         .data(root.leaves())
@@ -99,6 +109,7 @@ function drawTreemap(
         .attr("stroke-width", 1);
 
 
+    // Country names
     countries
         .filter(d =>
             (d.x1 - d.x0) > 50 &&
@@ -113,12 +124,15 @@ function drawTreemap(
         .text(d => d.data.name);
 
 
+    // ==========================================
+    // Continent / Area boundaries
+    // ==========================================
+
     const internalNodes = root.descendants()
         .filter(d =>
             d.depth > 0 &&
             d.children
         );
-
 
     const groups = svg.selectAll(".group")
         .data(internalNodes)
@@ -130,6 +144,7 @@ function drawTreemap(
         );
 
 
+    // Boundaries
     groups.append("rect")
         .attr(
             "width",
@@ -154,9 +169,12 @@ function drawTreemap(
         );
 
 
+    // ==========================================
+    // Continent labels
+    // ==========================================
+
     const continents = groups
         .filter(d => d.depth === 1);
-
 
     continents
         .append("rect")
@@ -173,7 +191,6 @@ function drawTreemap(
         .attr("fill", "white")
         .attr("opacity", 0.9);
 
-
     continents
         .append("text")
         .attr("x", 5)
@@ -184,13 +201,16 @@ function drawTreemap(
         .text(d => d.data.name);
 
 
+    // ==========================================
+    // Area labels
+    // ==========================================
+
     const areas = groups
         .filter(d =>
             d.depth === 2 &&
             (d.x1 - d.x0) > 80 &&
             (d.y1 - d.y0) > 30
         );
-
 
     areas
         .append("rect")
@@ -207,7 +227,6 @@ function drawTreemap(
         .attr("fill", "white")
         .attr("opacity", 0.9);
 
-
     areas
         .append("text")
         .attr("x", 5)
@@ -216,6 +235,10 @@ function drawTreemap(
         .attr("fill", "#222")
         .text(d => d.data.name);
 
+
+    // ==========================================
+    // Mouse interaction
+    // ==========================================
 
     countries
         .on("mouseover", function(event, d) {
@@ -232,7 +255,6 @@ function drawTreemap(
             const status =
                 d.data.status;
 
-                
             tooltip
                 .style("opacity", 1)
                 .html(`
@@ -245,20 +267,18 @@ function drawTreemap(
                     GDP: ${d.data.gdp} billion USD
                     <br>
                     Status:
-                    <span
-                        style="
-                            display:inline-block;
-                            width:12px;
-                            height:12px;
-                            background:${statusColor(status)};
-                            margin:0 5px;
-                            border:1px solid #777;
-                        "
-                    ></span>
+                    <span style="
+                        display: inline-block;
+                        width: 12px;
+                        height: 12px;
+                        background: ${statusColor(status)};
+                        border: 1px solid #777;
+                        margin: 0 4px;
+                        vertical-align: middle;
+                    "></span>
                     ${status}
                 `);
         })
-
 
         .on("mousemove", function(event) {
 
@@ -272,7 +292,6 @@ function drawTreemap(
                     `${event.pageY + 12}px`
                 );
         })
-
 
         .on("mouseout", function() {
 
