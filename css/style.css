@@ -136,3 +136,41 @@ h1 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
+
+/* ========================================
+   Lab 7
+   ======================================== */
+   
+
+#controls {
+    margin: 20px 0;
+}
+
+#controls button {
+    margin-right: 8px;
+    padding: 6px 12px;
+}
+
+#time-slider {
+    width: 500px;
+    margin: 0 10px;
+}
+
+#summary {
+    margin: 15px 0;
+}
+
+#chart {
+    position: relative;
+}
+
+.tooltip {
+    position: absolute;
+    opacity: 0;
+    background: white;
+    border: 1px solid #999;
+    padding: 8px;
+    pointer-events: none;
+    font-size: 13px;
+    z-index: 20;
+}

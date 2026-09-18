@@ -1,26 +1,99 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <title>Lab 7</title>
-
+    <title>Lab 7 - Temporal Commercial Network</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 
 <body>
 
-    <h1>Lab 7</h1>
+    <h1>Lab 7 — Temporal Commercial Network</h1>
 
     <p>
-        Lab 7 will be added here.
+        This visualization shows how commercial relationships among
+        companies change over 60 days.
     </p>
 
-    <a href="../index.html">
-        Back to home
-    </a>
+    <div id="controls">
+        <button id="play">Play</button>
+        <button id="pause">Pause</button>
+        <button id="reset">Reset</button>
+
+        <label for="time-slider">Day:</label>
+        <input type="range" id="time-slider" min="1" max="60" value="1" step="1">
+
+        <span id="date-label">Day 1</span>
+    </div>
+
+    <div id="summary">
+        <strong>Active companies:</strong> <span id="active-companies">0</span>
+        &nbsp;&nbsp;
+        <strong>Active links:</strong> <span id="active-links">0</span>
+        &nbsp;&nbsp;
+        <strong>Total transaction value:</strong> $<span id="total-value">0</span>
+    </div>
+
+    <div id="chart"></div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <h2>Temporal Network Observations</h2>
+
+    <ol>
+        <li>
+            <strong>How does overall network connectivity change across the 60 days?</strong>
+            The network changes from a smaller set of recurring connections in the
+            early days to a denser network later in the period. New relationships
+            begin to appear around Day 21, and many additional connections appear
+            from around Day 41 onward. Overall, the network becomes more connected
+            as more company pairs become active.
+        </li>
+
+        <li>
+            <strong>Which companies become more commercially active over time?</strong>
+            Companies such as Fusion Electronics (c06), Cedar Retail (c03),
+            and Ion Systems (c09) become particularly active as more connections
+            appear later in the 60-day period. The node size shows the total
+            transaction volume for each company on the current day, making these
+            changes in activity visible over time.
+        </li>
+
+        <li>
+            <strong>Are there periods when the network consists of relatively separate clusters?</strong>
+            Yes. During the earlier part of the period, several companies are
+            connected mainly through recurring relationships within smaller groups.
+            As new links appear, especially after Day 41, these groups become more
+            connected to one another and the network becomes less separated.
+        </li>
+
+        <li>
+            <strong>Which commercial relationships appear, disappear, or become stronger over time?</strong>
+            Several new relationships appear during the middle and later parts of
+            the period. For example, connections involving c06 with c08 and c12
+            appear around Day 21, while additional connections involving c03,
+            c09, c02, c05, and other companies become visible later. Link width
+            represents transaction amount, so thicker links indicate stronger
+            transaction relationships on a given day.
+        </li>
+
+        <li>
+            <strong>Does the network become more or less cross-regional over time?</strong>
+            More cross-regional connections appear in the later part of the
+            period. For example, later transactions connect companies across Asia,
+            Europe, and North America, including connections such as c03-c08,
+            c03-c11, c09-c01, c09-c06, and c02-c08. The different node border
+            colors make these regional relationships easier to inspect.
+        </li>
+    </ol>
+
+    <a href="../index.html">Back to home</a>
+
+    <script src="lab7.js"></script>
 
 </body>
 
