@@ -1,26 +1,293 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lab 8</title>
+    <title>Lab 8 - DKU Undergraduate Bulletin</title>
 
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        /* Styles needed for the Lab 8 visualizations */
+
+        .controls {
+            margin: 15px 0;
+        }
+
+        .controls input,
+        .controls select,
+        .controls button {
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin: 5px 12px 5px 0;
+        }
+
+        .swatch {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+
+        .bar {
+            background: #ddd;
+            margin: 4px 0;
+            padding: 3px 5px;
+        }
+
+        .layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        #map {
+            width: 70%;
+            max-width: 900px;
+            border: 1px solid #ccc;
+        }
+
+        #details {
+            width: 30%;
+            max-height: 600px;
+            overflow: auto;
+            overflow-wrap: anywhere;
+        }
+
+        .scroll {
+            overflow: auto;
+            max-height: 700px;
+        }
+
+        .passage,
+        .cell {
+            cursor: pointer;
+        }
+
+        .passage {
+            stroke: white;
+            stroke-width: 1px;
+        }
+
+        .chosen {
+            stroke: black !important;
+            stroke-width: 3px !important;
+        }
+
+        .neighbor {
+            stroke: #c44 !important;
+            stroke-width: 2px !important;
+        }
+
+        @media (max-width: 750px) {
+            .layout {
+                display: block;
+            }
+
+            #map,
+            #details {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Lab 8</h1>
+    <h1>Lab 8: Exploring the DKU Undergraduate Bulletin</h1>
 
     <p>
-        Lab 8 will be added here.
+        Bulletin of Duke Kunshan University Undergraduate Instruction,
+        academic year 2021–2022, published July 2021.
+        <a href="https://dku-web-admissions.s3.cn-north-1.amazonaws.com.cn/dkumain/files/V2021-22_DKU_UG_Bulletin.pdf">
+            Official PDF
+        </a>.
+        Accessed September 25, 2026.
     </p>
 
-    <a href="../index.html">
-        Back to home
-    </a>
+
+    <h2>1. Corpus Overview</h2>
+
+    <div id="stats"></div>
+
+    <h3>Passages by Section</h3>
+
+    <div id="bars"></div>
+
+
+    <h2>2. Semantic Embedding Map</h2>
+
+    <p>
+        Each point represents one passage from the bulletin.
+        Position shows its UMAP projection, color shows its semantic topic,
+        and size shows passage length. Nearby points tend to discuss
+        similar ideas. The x- and y-axes do not have independent meanings.
+    </p>
+
+    <div class="controls">
+        <input
+            id="search"
+            type="text"
+            placeholder="Search passages (e.g. credit)"
+        >
+
+        <select id="section">
+            <option value="">All sections</option>
+        </select>
+
+        <select id="topic">
+            <option value="">All topics</option>
+        </select>
+
+        <button id="clear">Reset selection</button>
+    </div>
+
+    <div id="legend"></div>
+
+    <div class="layout">
+        <svg
+            id="map"
+            viewBox="0 0 900 600"
+            aria-label="Semantic embedding map"
+        ></svg>
+
+        <div id="details">
+            Click a point or a matrix cell to explore its passages.
+        </div>
+    </div>
+
+    <p>
+        Scroll over the map to zoom and drag to pan.
+        Search and filters dim passages that do not match.
+        Clicking a point shows its full text and five nearest
+        semantic neighbors.
+    </p>
+
+
+    <h2>3. Topic × Bulletin Section Matrix</h2>
+
+    <p>
+        Rows represent formal bulletin sections and columns represent
+        semantic topics. Darker cells contain more passages.
+        Click a cell to highlight its passages in the map.
+    </p>
+
+    <div class="scroll">
+        <div id="matrix"></div>
+    </div>
+
+    <div id="tip"></div>
+
+
+    <h2>4. Questions and Findings</h2>
+
+    <h3>1. What are the major semantic topics?</h3>
+
+    <p>
+        The eight topics are global history and society (225 passages);
+        natural sciences and technology (208); writing, media and
+        research (173); academic rules and student status (165);
+        China and Chinese studies (163); environment, health and policy
+        (155); course credits and degree requirements (143); and
+        university programs and transfer (123).
+    </p>
+
+    <h3>2. Which topics appear across multiple formal sections?</h3>
+
+    <p>
+        University programs and transfer appears in 53 formal sections.
+        Academic rules and student status appears in 35 sections,
+        while course credits and degree requirements appears in 20.
+        The matrix shows that these topics extend beyond a single
+        section of the bulletin.
+    </p>
+
+    <h3>3. Which sections contain the most diverse content?</h3>
+
+    <p>
+        Among sections containing at least ten passages, Course Descriptions
+        has the highest topic entropy (2.52 bits across 794 passages).
+        Majors follows with 2.46 bits across 136 passages. These sections
+        contain passages from several semantic topics. Course Descriptions
+        is much larger than other sections, so its passage count should
+        not be interpreted as a direct measure of topic diversity.
+    </p>
+
+    <h3>4. Which passages from different sections are similar?</h3>
+
+    <p>
+        Passage p00036 in Key Components (PDF page 18) and passage p00075
+        in Degree Requirements (PDF page 25) are semantic neighbors.
+        Both discuss course credits and requirements for the degree.
+        Although the passages occur in different formal sections,
+        the nearest-neighbor results connect them through their content.
+    </p>
+
+    <h3>5. Does “credit” occur in one topic or several?</h3>
+
+    <p>
+        The singular word “credit” appears in 127 passages.
+        Of these, 71 belong to course credits and degree requirements,
+        35 to university programs and transfer, and 15 to academic
+        rules and student status. A few more occur in other topics.
+        The concept therefore appears in several semantic contexts.
+    </p>
+
+
+    <h2>5. Design Description</h2>
+
+    <p>
+        This explorer uses the official 2021–2022 Duke Kunshan University
+        undergraduate bulletin. PyMuPDF extracts text blocks from its
+        400 PDF pages, while the PDF outline supplies the chapter,
+        section, and subsection. I excluded front matter, short artifacts,
+        and exact duplicates, and divided long blocks at sentence boundaries.
+        This produced 1,355 passages from 5,376 raw text blocks. Each passage
+        retains its physical PDF page number. The uneven passage counts
+        matter: Course Descriptions alone contributes 794 passages, so
+        the map represents the document’s content density as well as
+        its variety.
+    </p>
+
+    <p>
+        I encoded each passage with the normalized all-MiniLM-L6-v2
+        sentence embedding. KMeans grouped the original vectors into
+        eight clusters (seed 401). I inspected characteristic TF-IDF
+        terms and representative passages before naming the clusters.
+        UMAP projects the embedding vectors into two dimensions using
+        cosine distance, 15 neighbors, a minimum distance of 0.15,
+        and seed 401. Nearby points suggest related meanings; neither
+        axis has an independent interpretation.
+    </p>
+
+    <p>
+        Each dot represents a passage: position shows the projection,
+        color shows its reviewed topic, and radius shows passage length.
+        Search and section/topic menus dim unrelated passages. Pan and
+        zoom help inspect dense neighborhoods. Clicking a passage opens
+        its full text, hierarchy, page, and five nearest passages measured
+        in the original embedding space. The matrix counts passages for
+        each topic and formal section. Clicking a matrix cell highlights
+        its dots; clicking a dot outlines its cell. These links make it
+        easier to see that credit occurs in degree requirements, transfer
+        discussions, and academic rules, even when those passages appear
+        far apart in the bulletin.
+    </p>
+
+
+    <p>
+        <a href="../index.html">Back to home</a>
+    </p>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="lab8.js"></script>
 
 </body>
 
