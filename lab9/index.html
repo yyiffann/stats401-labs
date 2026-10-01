@@ -1,26 +1,334 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lab 9</title>
+    <title>Lab 9 - Geospatial Visualization</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- D3 -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    
+    <style>
+
+        body {
+            max-width: none !important;
+            width: 100% !important;
+        }
+
+        .lab9-container {
+            width: calc(100vw - 32px);
+            max-width: 1600px !important;
+            margin: 0 auto;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .maps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+            width: 100%;
+        }
+
+        .map-section {
+            min-width: 0;
+            margin: 25px 0;
+        }
+
+        .map-description {
+            min-height: 48px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .map-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .map-hint {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .reset-button {
+            padding: 5px 10px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .map-card {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            background: white;
+        }
+
+        #choropleth {
+            width: 100%;
+            height: 430px;
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        #choropleth:active {
+            cursor: grabbing;
+        }
+
+        #choropleth svg {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+        }
+
+        #cartogram {
+            width: 100%;
+            height: 430px;
+        }
+
+        #cartogram svg {
+            display: block !important;
+            max-width: 100% !important;
+        }
+
+        #cartogram-loading {
+            height: 430px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        #lab9-tooltip {
+            position: fixed;
+            display: none;
+            pointer-events: none;
+            background: white;
+            border: 1px solid #777;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        #choropleth-legend svg {
+            display: block;
+            width: 100%;
+            max-width: 470px;
+            height: auto;
+        }
+
+        .map-note {
+            margin-top: 8px;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .selected-country {
+            margin: 15px 0;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            background: #f7f7f7;
+            border-radius: 4px;
+        }
+
+        .analysis {
+            max-width: 1000px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 950px) {
+
+            .maps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-description {
+                min-height: auto;
+            }
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-    <h1>Lab 9</h1>
+<div class="lab9-container">
 
-    <p>
-        Lab 9 will be added here.
-    </p>
+    <h1>Lab 9: Geospatial Visualization</h1>
 
-    <a href="../index.html">
-        Back to home
-    </a>
+    <section>
+
+        <h2>1. Dataset Description</h2>
+
+        <p>
+            This lab visualizes 2025 nominal GDP for the 50 largest
+            economies. GDP is measured in billions of current U.S.
+            dollars. Countries outside the provided top-50 dataset are
+            treated as missing data rather than having zero GDP.
+        </p>
+
+    </section>
+
+
+    <div class="maps-grid">
+
+
+        <!-- Choropleth -->
+
+        <section class="map-section">
+
+            <h2>2. 2025 GDP Choropleth</h2>
+
+            <p class="map-description">
+                Country location and geographic shape are preserved,
+                while color represents 2025 nominal GDP.
+            </p>
+
+            <div class="map-toolbar">
+
+                <span class="map-hint">
+                    Scroll to zoom · Drag to pan · Hover for details
+                </span>
+
+                <button
+                    id="reset-choropleth"
+                    class="reset-button"
+                >
+                    Reset view
+                </button>
+
+            </div>
+
+            <div class="map-card">
+
+                <div id="choropleth"></div>
+
+                <div id="choropleth-legend"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Cartogram -->
+
+        <section class="map-section">
+
+            <h2>3. 2025 GDP Cartogram</h2>
+
+            <p class="map-description">
+                Country area represents 2025 nominal GDP.
+                Economies with larger GDP therefore occupy more
+                visual area.
+            </p>
+
+            <div class="map-toolbar">
+
+                <span class="map-hint">
+                    Hover for details · Click to link views
+                </span>
+
+            </div>
+
+            <div class="map-card">
+
+                <div id="cartogram-loading">
+                    Computing cartogram...
+                </div>
+
+                <div id="cartogram"></div>
+
+            </div>
+
+            <p class="map-note">
+                Area represents GDP for economies in the provided
+                top-50 dataset. Gray regions indicate missing GDP data.
+            </p>
+
+        </section>
+
+
+    </div>
+
+
+    <div class="selected-country">
+
+        Selected country:
+        <span id="selected-country">None</span>
+
+    </div>
+
+
+    <section class="map-section">
+
+        <h2>4. Design and Comparison</h2>
+
+        <div class="analysis">
+
+            <p>
+                The choropleth preserves familiar country shapes,
+                locations, and spatial relationships, so it is useful
+                for examining where large economies are located and
+                identifying geographic patterns. However, geographic
+                area remains unchanged, meaning that physically large
+                countries may attract considerable visual attention
+                even though land area is not the variable being shown.
+            </p>
+
+            <p>
+                The cartogram changes this relationship by making
+                country area represent GDP. Large economies become
+                much more visually prominent, while smaller economies
+                shrink. This makes differences in total economic
+                magnitude easier to notice, but geographic shape,
+                area, and relative position become distorted.
+                Consequently, some countries are harder to recognize.
+                Linked highlighting helps users connect countries
+                between the two representations.
+            </p>
+
+            <p>
+                I use a logarithmic color scale in the choropleth
+                because GDP values are strongly skewed. A linear scale
+                would compress many economies into similar light
+                colors. Overall, color encoding is useful for examining
+                geographic patterns, while area encoding emphasizes
+                differences in economic magnitude. Each representation
+                therefore supports different analytical tasks and
+                involves a trade-off between geographic accuracy and
+                quantitative emphasis.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<div id="lab9-tooltip"></div>
+
+
+<script src="lab9.js"></script>
 
 </body>
 
